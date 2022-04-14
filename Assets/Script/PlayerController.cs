@@ -26,16 +26,18 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-       if(hasShield == true)
+        if (hasShield == true)
         {
             shieldInd.transform.position = transform.position;
-        } 
+
+            //
+        }
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if(GameManager.instance.startGame == true)
+        if (GameManager.instance.startGame == true)
         {
             Movement();
         }
@@ -49,68 +51,68 @@ public class PlayerController : MonoBehaviour
         float horizontalInput = Input.GetAxis("Horizontal");
 
         _playerRb.velocity = (Vector3.right * speed * horizontalInput);
-        
-        if(transform.position.x >= _xBoundary)
+
+        if (transform.position.x >= _xBoundary)
         {
-            transform.position = new Vector3(_xBoundary, transform.position.y,transform.position.z);
+            transform.position = new Vector3(_xBoundary, transform.position.y, transform.position.z);
         }
 
-        if(transform.position.x <= -_xBoundary)
+        if (transform.position.x <= -_xBoundary)
         {
-            transform.position = new Vector3(-_xBoundary, transform.position.y,transform.position.z);
+            transform.position = new Vector3(-_xBoundary, transform.position.y, transform.position.z);
         }
         _playerRb.AddForce((Vector3.down * _gravityModifier * Time.deltaTime), ForceMode.Acceleration);
     }
 
     void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.CompareTag("BadPlat") && !hasShield)
+        if (other.gameObject.CompareTag("BadPlat") && !hasShield)
         {
             transform.position = _manager._reSpawnPos + new Vector3(0, 0.34f, 0);
-            playerLife -=1;
+            playerLife -= 1;
             _manager.playerLifeText.text = "XP: " + playerLife;
 
-            if(playerLife <= 0)
+            if (playerLife <= 0)
             {
-            playerLife = 0;
-            Destroy(gameObject);
-            _manager.GameOver();
+                playerLife = 0;
+                Destroy(gameObject);
+                _manager.GameOver();
             }
         }
 
-        else if(other.gameObject.CompareTag("BadPlat") && hasShield)
+        else if (other.gameObject.CompareTag("BadPlat") && hasShield)
         {
             Destroy(other.gameObject);
         }
 
-        else if(other.gameObject.CompareTag("Top Sensor"))
+        else if (other.gameObject.CompareTag("Top Sensor"))
         {
             transform.position = _manager._reSpawnPos + new Vector3(0, 0.34f, 0);
-            playerLife -=1;
+            playerLife -= 1;
             _manager.playerLifeText.text = "XP: " + playerLife;
 
-            if(playerLife <= 0)
+            if (playerLife <= 0)
             {
-            playerLife = 0;
-            Destroy(gameObject);
-            _manager.GameOver();
+                playerLife = 0;
+                Destroy(gameObject);
+                _manager.GameOver();
             }
         }
 
-        else if(other.gameObject.CompareTag("Low Sensor"))
+        else if (other.gameObject.CompareTag("Low Sensor"))
         {
             transform.position = _manager._reSpawnPos + new Vector3(0, 0.34f, 0);
-            playerLife -=1;
+            playerLife -= 1;
             _manager.playerLifeText.text = "XP: " + playerLife;
 
-            if(playerLife <= 0)
+            if (playerLife <= 0)
             {
-            playerLife = 0;
-            Destroy(gameObject);
-            _manager.GameOver();
+                playerLife = 0;
+                Destroy(gameObject);
+                _manager.GameOver();
             }
         }
-        else if(other.gameObject.CompareTag("Coin"))
+        else if (other.gameObject.CompareTag("Coin"))
         {
             Destroy(other.gameObject);
         }
@@ -118,25 +120,25 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter(Collision other)
     {
-        if(other.gameObject.CompareTag("ExtraLife"))
+        if (other.gameObject.CompareTag("ExtraLife"))
         {
             playerLife += 1;
             Destroy(other.gameObject);
         }
 
-        else if(other.gameObject.CompareTag("ScoreX PU"))
+        else if (other.gameObject.CompareTag("ScoreX PU"))
         {
             Destroy(other.gameObject);
             GameManager.instance.StartCoroutine("ScoreXPU");
         }
 
-        else if(other.gameObject.CompareTag("Magnet PU"))
+        else if (other.gameObject.CompareTag("Magnet PU"))
         {
 
             Destroy(other.gameObject);
         }
 
-        else if(other.gameObject.CompareTag("Shield PU"))
+        else if (other.gameObject.CompareTag("Shield PU"))
         {
             shieldInd = Instantiate(shieldIndicator, transform.position, transform.rotation, this.gameObject.transform);
             hasShield = true;
