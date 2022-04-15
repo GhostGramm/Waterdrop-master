@@ -30,14 +30,13 @@ public class PlayerController : MonoBehaviour
         {
             shieldInd.transform.position = transform.position;
 
-            //
         }
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (GameManager.instance.startGame == true)
+        if (GameManager.instance.startGame)
         {
             Movement();
         }
@@ -68,9 +67,7 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("BadPlat") && !hasShield)
         {
-            transform.position = _manager._reSpawnPos + new Vector3(0, 0.34f, 0);
-            playerLife -= 1;
-            _manager.playerLifeText.text = "XP: " + playerLife;
+            reSpawn();
 
             if (playerLife <= 0)
             {
@@ -87,9 +84,7 @@ public class PlayerController : MonoBehaviour
 
         else if (other.gameObject.CompareTag("Top Sensor"))
         {
-            transform.position = _manager._reSpawnPos + new Vector3(0, 0.34f, 0);
-            playerLife -= 1;
-            _manager.playerLifeText.text = "XP: " + playerLife;
+            reSpawn();
 
             if (playerLife <= 0)
             {
@@ -101,9 +96,7 @@ public class PlayerController : MonoBehaviour
 
         else if (other.gameObject.CompareTag("Low Sensor"))
         {
-            transform.position = _manager._reSpawnPos + new Vector3(0, 0.34f, 0);
-            playerLife -= 1;
-            _manager.playerLifeText.text = "XP: " + playerLife;
+            reSpawn();
 
             if (playerLife <= 0)
             {
@@ -145,6 +138,12 @@ public class PlayerController : MonoBehaviour
             Destroy(other.gameObject);
             StartCoroutine(ShieldLifeSpan());
         }
+    }
+
+    public void reSpawn()
+    {
+        playerLife -= 1;
+        transform.position = _manager._reSpawnPos + new Vector3(0, 0.34f, 0);
     }
 
     public IEnumerator ShieldLifeSpan()
