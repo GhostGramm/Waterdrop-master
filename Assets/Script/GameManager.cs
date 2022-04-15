@@ -76,12 +76,14 @@ public class GameManager : MonoBehaviour
 
         Instantiate(player, _playerStartPos, transform.rotation);
         InvokeRepeating("SpawnPlatforms", _startSpawnTime, _contSpawnTime);
+        InvokeRepeating("spawnBadPlatforms", 8f, Random.Range(2f, 15f));
+
     }
 
     public IEnumerator CalculateSpawnPos()
     {
         _spawnPos = new Vector3(Random.Range(-_xSpawnPosRange, _xSpawnPosRange), -_ySpawnPos, 0);
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.1f);
         StartCoroutine(CalculateSpawnPos());
 
     }
@@ -90,19 +92,31 @@ public class GameManager : MonoBehaviour
     {
         if (startGame)
         {
-            //_spawnPos = new Vector3(Random.Range(-_xSpawnPosRange, _xSpawnPosRange), -_ySpawnPos, 0);
-
             Instantiate(platforms[0], _spawnPos, platforms[0].transform.rotation, platformParent);
         }
     }
 
-    public IEnumerator SpawnBadPlatforms()
+    public void spawnBadPlatforms()
     {
-        //_spawnPos = new Vector3(Random.Range(-_xSpawnPosRange, _xSpawnPosRange), -_ySpawnPos, 0);
-        yield return new WaitForSeconds(Random.Range(2.0f, 15.0f));
-        Instantiate(platforms[1], _spawnPos, platforms[1].transform.rotation);
-        StartCoroutine("SpawnBadPlatforms");
+        GameObject badPlatform = Instantiate(platforms[1], _spawnPos, platforms[1].transform.rotation);
     }
+
+    //public IEnumerator SpawnBadPlatforms()
+    //{
+    //    //_spawnPos = new Vector3(Random.Range(-_xSpawnPosRange, _xSpawnPosRange), -_ySpawnPos, 0);
+    //    yield return new WaitForSeconds(Random.Range(2.0f, 15.0f));
+
+    //    GameObject badPlatform = Instantiate(platforms[1], _spawnPos, platforms[1].transform.rotation);
+    //    if (Physics.Raycast(badPlatform.transform.position, Vector3.down, out RaycastHit hit, 10))
+    //    {
+    //        print(hit.transform.gameObject);
+    //        if (hit.transform.gameObject.CompareTag("GoodPlat"))
+    //        {
+    //            //Destroy(badPlatform);
+    //        }
+    //    }
+    //    StartCoroutine("SpawnBadPlatforms");
+    //}
 
     public IEnumerator SpawnPowerup()
     {
@@ -112,16 +126,16 @@ public class GameManager : MonoBehaviour
         StartCoroutine(SpawnPowerup());
     }
 
-    public IEnumerator SpawnCoins()
-    {
-        int coinsIndex = Random.Range(0, coins.Length);
-        while (true)
-        {
-            yield return new WaitForSeconds(Random.Range(5.0f, 15.0f));
-            Instantiate(coins[coinsIndex], _spawnPos + new Vector3(Random.Range(-_xSpawnPosRange, _xSpawnPosRange), 0, 0), transform.rotation);
-        }
+    //public IEnumerator SpawnCoins()
+    //{
+    //    int coinsIndex = Random.Range(0, coins.Length);
+    //    while (true)
+    //    {
+    //        yield return new WaitForSeconds(Random.Range(5.0f, 15.0f));
+    //        Instantiate(coins[coinsIndex], _spawnPos + new Vector3(Random.Range(-_xSpawnPosRange, _xSpawnPosRange), 0, 0), transform.rotation);
+    //    }
 
-    }
+    //}
 
     public IEnumerator StartGametimer()
     {
@@ -129,19 +143,19 @@ public class GameManager : MonoBehaviour
         {
             yield return new WaitForSeconds(1.0f);
             _countDown--;
-            countDown.text = " " + _countDown + " ";
+            UIManager.instance.SetCountDown(_countDown);
             if (_countDown == 0)
             {
-                countDown.gameObject.SetActive(false);
+                UIManager.instance.CountDown.gameObject.SetActive(false);
                 startGame = true;
                 StartCoroutine(CountScore());
                 StartCoroutine(GameSpeedController());
-                StartCoroutine(SpawnCoins());
-                StartCoroutine("SpawnBadPlatforms");
+                //StartCoroutine(SpawnCoins());
                 StartCoroutine(SpawnPowerup());
             }
         }
     }
+
 
     public IEnumerator CountScore()
     {
@@ -156,7 +170,7 @@ public class GameManager : MonoBehaviour
         float scale = 0.1f;
         while (true)
         {
-            yield return new WaitForSeconds(5f);
+            yield return new WaitForSeconds(30f);
             if (!gameover)
             {
                 Time.timeScale += scale;
@@ -178,16 +192,18 @@ public class GameManager : MonoBehaviour
 
     void PauseGame()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && gameActive)
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            Time.timeScale = 0;
-            gameActive = false;
-        }
-
-        else if (Input.GetKeyDown(KeyCode.Space) && !gameActive)
-        {
-            Time.timeScale = 1;
-            gameActive = true;
+            if (gameActive)
+            {
+                Time.timeScale = 0;
+                gameActive = false;
+            }
+            else
+            {
+                Time.timeScale = 1;
+                gameActive = true;
+            }
         }
     }
 

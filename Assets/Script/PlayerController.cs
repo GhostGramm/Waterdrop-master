@@ -41,7 +41,7 @@ public class PlayerController : MonoBehaviour
             Movement();
         }
 
-        _manager.playerLifeText.text = "XP: " + playerLife;
+        UIManager.instance.LifeAmount.text = "XP: " + playerLife;
 
     }
 

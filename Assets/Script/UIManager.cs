@@ -37,6 +37,11 @@ public class UIManager : MonoBehaviour
 
     }
 
+    public void SetCountDown(int number)
+    {
+        CountDown.text = $" {number}";
+    }
+
     public void UpdateScore(int number)
     {
         Score.text = "Score: " + number;

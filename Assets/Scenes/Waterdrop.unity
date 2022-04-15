@@ -972,11 +972,6 @@ MonoBehaviour:
   - {fileID: 6818624926040739009, guid: dc0d95cfa2f2bd14fbf30835e4988c3d, type: 3}
   platformParent: {fileID: 171715986}
   _reSpawnPos: {x: 0, y: 0, z: 0}
-  scoreText: {fileID: 306530423}
-  playerLifeText: {fileID: 1326656358}
-  gameoverText: {fileID: 1688639660}
-  countDown: {fileID: 1843201576}
-  restartButton: {fileID: 1476164161}
   _controlPlayer: {fileID: 347149964926937296, guid: c256e2bbea8a31045bfd3202c0847d99,
     type: 3}
   _countDown: 4
@@ -1014,6 +1009,7 @@ MonoBehaviour:
   LifeAmount: {fileID: 1326656358}
   GameOver: {fileID: 1688639660}
   CountDown: {fileID: 1843201576}
+  RestartButton: {fileID: 1476164161}
 --- !u!1 &1476164159
 GameObject:
   m_ObjectHideFlags: 0
