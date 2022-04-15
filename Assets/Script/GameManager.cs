@@ -16,11 +16,6 @@ public class GameManager : MonoBehaviour
     private Vector3 _randomStartPos;
     public Vector3 _reSpawnPos;
     public static GameManager instance = null;
-    public TextMeshProUGUI scoreText;
-    public TextMeshProUGUI playerLifeText;
-    public TextMeshProUGUI gameoverText;
-    public TextMeshProUGUI countDown;
-    public Button restartButton;
     public PlayerController _controlPlayer;
     private float _startSpawnTime = 1.0f;
     private float _contSpawnTime = 1.0f;
@@ -35,14 +30,14 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        if(instance == null)
+        if (instance == null)
         {
             instance = this;
         }
-        else if(instance != this)
+        else if (instance != this)
         {
             Destroy(this.gameObject);
-        } 
+        }
     }
 
     // Start is called before the first frame update
@@ -60,7 +55,7 @@ public class GameManager : MonoBehaviour
     {
         _reSpawnPos = platformParent.GetChild(2).transform.position;
         Vector3 _powerupSpawnPos = platformParent.GetChild(0).transform.position;
-        
+
         PauseGame();
     }
 
@@ -93,7 +88,7 @@ public class GameManager : MonoBehaviour
 
     void SpawnPlatforms()
     {
-        if (startGame == true)
+        if (startGame)
         {
             //_spawnPos = new Vector3(Random.Range(-_xSpawnPosRange, _xSpawnPosRange), -_ySpawnPos, 0);
 
@@ -120,12 +115,12 @@ public class GameManager : MonoBehaviour
     public IEnumerator SpawnCoins()
     {
         int coinsIndex = Random.Range(0, coins.Length);
-        while(true)
+        while (true)
         {
-            yield return new WaitForSeconds (Random.Range(5.0f, 15.0f));
+            yield return new WaitForSeconds(Random.Range(5.0f, 15.0f));
             Instantiate(coins[coinsIndex], _spawnPos + new Vector3(Random.Range(-_xSpawnPosRange, _xSpawnPosRange), 0, 0), transform.rotation);
         }
-        
+
     }
 
     public IEnumerator StartGametimer()
@@ -152,58 +147,27 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(0.05f);
         score++;
-        scoreText.text = "Score: " + score;
+        UIManager.instance.UpdateScore(score);
         StartCoroutine(CountScore());
     }
 
     public IEnumerator GameSpeedController()
     {
-        int gameTime = 0;
-        while(true)
+        float scale = 0.1f;
+        while (true)
         {
-            yield return new WaitForSeconds(1.0f);
-            gameTime++;
-
-            if(gameTime >= 60 && !gameover)
+            yield return new WaitForSeconds(5f);
+            if (!gameover)
             {
-                Time.timeScale = 1.1f;
-            }
-            if(gameTime >= 120 && !gameover)
-            {
-                Time.timeScale = 1.2f;
-            }
-            if(gameTime >= 180 && !gameover)
-            {
-                Time.timeScale = 1.3f;
-            }
-            if(gameTime >= 240 && !gameover)
-            {
-                Time.timeScale = 1.4f;
-            }
-            if(gameTime >= 300 && !gameover)
-            {
-                Time.timeScale = 1.5f;
-            }
-            if(gameTime >= 360 && !gameover)
-            {
-                Time.timeScale = 1.6f;
-            }
-            if(gameTime >= 420 && !gameover)
-            {
-                Time.timeScale = 1.7f;
-            }
-            if(gameTime >= 580 && !gameover)
-            {
-                Time.timeScale = 1.8f;
+                Time.timeScale += scale;
             }
         }
     }
 
     public void GameOver()
     {
-        restartButton.gameObject.SetActive(true);
-        gameoverText.gameObject.SetActive(true);
         gameover = true;
+        UIManager.instance.GameOverPanel(true);
         Time.timeScale = 0;
     }
 
@@ -214,13 +178,13 @@ public class GameManager : MonoBehaviour
 
     void PauseGame()
     {
-        if(Input.GetKeyDown(KeyCode.Space) && gameActive)
+        if (Input.GetKeyDown(KeyCode.Space) && gameActive)
         {
             Time.timeScale = 0;
             gameActive = false;
         }
 
-        else if(Input.GetKeyDown(KeyCode.Space) && !gameActive)
+        else if (Input.GetKeyDown(KeyCode.Space) && !gameActive)
         {
             Time.timeScale = 1;
             gameActive = true;
@@ -230,17 +194,17 @@ public class GameManager : MonoBehaviour
     public IEnumerator ScoreXPU()
     {
         int secondsToWait = 15;
-        while(secondsToWait > 0)
+        while (secondsToWait > 0)
         {
             score += 100;
             yield return new WaitForSeconds(1.0f);
             secondsToWait--;
 
-            if(secondsToWait == 0)
+            if (secondsToWait == 0)
             {
                 break;
             }
         }
-            
+
     }
 }
